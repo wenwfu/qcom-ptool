@@ -19,9 +19,15 @@ Once installed, the tool is invoked as:
 ```sh
 qcom-ptool gen_partition -i platforms/<soc>/<variant>/partitions.conf -o partitions.xml
 qcom-ptool gen_contents  -p partitions.xml -t contents.xml.in -o contents.xml
+qcom-ptool gen_udev_rules -o 55-qcom-raw-partitions-noblkid.rules
 qcom-ptool ptool         -x partitions.xml
 qcom-ptool msp           -r rawprogram0.xml -d /dev/sdX -p patch0.xml
 ```
+
+The generated udev rules are machine-independent. On systemd v252 and newer
+they use `UDEV_DISABLE_PERSISTENT_STORAGE_BLKID_FLAG` to skip filesystem probing
+for known raw partition names. Older systemd versions safely ignore the flag
+and retain their normal probing behavior.
 
 Run `qcom-ptool <subcommand> -h` to see the options accepted by each
 subcommand.
